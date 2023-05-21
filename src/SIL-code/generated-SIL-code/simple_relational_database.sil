@@ -1,0 +1,59 @@
+import imap
+import imap_config
+import string
+
+// Get the configuration from the environment and command line.
+config = imap_config.getConfig(commandLineArguments)
+
+// Connect to the server.
+creds = imap.ImapLogin(config.user, config.pass)
+server = imap.ImapServer(config.host, config.port)
+session =
+  imap.Session(server, creds)
+  |> imap.openConnection()
+  |> imap.login()
+
+// -------------------------------------------------------------------------------------------------
+// Here's an attempt to create something resembling a simple relational database.
+
+// Define two tables, 'Employees' and 'Departments'.
+Employees = { "1": ["Alice", "Engineering"], "2": ["Bob", "Marketing"], "3": ["Charlie", "Engineering"] }
+Departments = { "Engineering": ["Alice", "Charlie"], "Marketing": ["Bob"] }
+
+// Function to emulate SQL SELECT operation.
+select = (table, id) => {
+    table[id] |> enforce("Id does not exist in table.")
+}
+
+// Function to emulate SQL INSERT operation.
+insert = (table, id, values) => {
+    addEntry(table, id, values)
+}
+
+// Function to emulate SQL DELETE operation.
+delete = (table, id) => {
+    removeEntry(table, id)
+}
+
+// Function to emulate SQL JOIN operation.
+join = (table1, table2, commonField) => {
+    // This is a very basic JOIN operation and does not account for multiple matches, etc.
+    joinedTable = {}
+    for key in keys(table1) {
+        value = table1[key][commonField]
+        if find(keys(table2), value) != [] {
+            joinedTable = addEntry(joinedTable, key, [table1[key], table2[value]])
+        }
+    }
+    joinedTable
+}
+
+// Close the session.
+imap.closeConnection(session)
+
+// Perform operations.
+newEmployee = ["David", "Marketing"]
+Employees = insert(Employees, "4", newEmployee)
+Departments = insert(Departments, newEmployee[1], ["David"])
+print(select(Employees, "1"))
+print(join(Employees, Departments, 1))

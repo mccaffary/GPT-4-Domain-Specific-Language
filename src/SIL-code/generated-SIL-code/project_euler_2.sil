@@ -1,0 +1,29 @@
+// Define a function to generate the next term in the Fibonacci sequence.
+nextFibonacciTerm = (tuple) => [tuple[1], tuple[0] + tuple[1]]
+
+// Start with the first two terms.
+initialTerms = [1, 2]
+
+// Define a function to generate Fibonacci sequence up to a limit.
+generateFibonacci = (limit) => {
+  fibonacciSequence = unfold(nextFibonacciTerm, initialTerms, (tuple) => tuple[1] <= limit)
+  fibonacciSequence
+}
+
+// Define a function to check if a number is even.
+isEven = (num) => num % 2 == 0
+
+// Generate the Fibonacci sequence up to four million.
+fibonacciSequence = generateFibonacci(4000000)
+
+// Extract the second term from each tuple in the sequence, which is the actual Fibonacci number.
+fibonacciNumbers = fibonacciSequence |> map(tuple => tuple[1])
+
+// Filter the sequence to get only even numbers.
+evenFibonacciNumbers = fibonacciNumbers |> filter(isEven)
+
+// Sum the even numbers.
+sum = evenFibonacciNumbers |> fold((a, b) => a + b, 0)
+
+// Print the sum.
+print(sum)

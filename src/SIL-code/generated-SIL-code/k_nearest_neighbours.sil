@@ -1,0 +1,21 @@
+import math
+
+distance(p1, p2) => {
+  math.sqrt(
+    math.pow(p1[0] - p2[0], 2)
+    + math.pow(p1[1] - p2[1], 2)
+  )
+}
+
+majorityVote(labels) => {
+  labelCounts = labels |> fold((counts, label) => addEntry(counts, label, get(counts, label, 0) + 1), {})
+  labelCounts |> maxBy((_, count) => count)
+}
+
+knn(data, newPoint, k) => {
+  distances = data |> map((point, label) => (distance(point, newPoint), label))
+  sorted = distances |> sort((a, b) => a[0] < b[0])
+  nearest = sorted |> take(k)
+  labels = nearest |> map((_, label) => label)
+  majorityVote(labels)
+}

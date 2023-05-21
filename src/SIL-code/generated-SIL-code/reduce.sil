@@ -1,0 +1,5 @@
+// The reduce-like function would take a binary function, a list, and an initial accumulator, and apply the function to each element in the list with the accumulator.
+reduceList(func, list, acc) => {
+  len(list) > 0 |> enforce("Cannot reduce an empty list.")
+  in iota(len(list)) |> fold((result, i) => func(result, list[i]), acc)
+}

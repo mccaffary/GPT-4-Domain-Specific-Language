@@ -1,0 +1,19 @@
+// Helper function to bubble up the largest value in one pass
+bubble(list) => {
+  if length(list) <= 1 then
+    list
+  else
+    if list[0] > list[1] then
+      [list[1]] ~ bubble([list[0]] ~ list[2 to $])
+    else
+      [list[0]] ~ bubble(list[1 to $])
+}
+
+// Main BubbleSort function
+bubbleSort(list) => {
+  bubbled = bubble(list)
+  if bubbled == list then
+    list
+  else
+    bubbleSort(bubbled)
+}

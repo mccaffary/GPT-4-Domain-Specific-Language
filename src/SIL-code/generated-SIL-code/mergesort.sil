@@ -1,0 +1,24 @@
+// Helper function to merge two sorted lists
+merge(a, b) => {
+  if length(a) == 0 then
+    b
+  else if length(b) == 0 then
+    a
+  else if a[0] <= b[0] then
+    [a[0]] ~ merge(a[1 to $], b)
+  else
+    [b[0]] ~ merge(a, b[1 to $])
+}
+
+// Main MergeSort function
+mergeSort(list) => {
+  n = length(list)
+  if n < 2 then
+    list
+  else {
+    middle = n // 2
+    left = list[0 to middle]
+    right = list[middle to $]
+    merge(mergeSort(left), mergeSort(right))
+  }
+}

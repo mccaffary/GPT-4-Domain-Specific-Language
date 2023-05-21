@@ -1,0 +1,25 @@
+// Helper function to sort an array of integers.
+sortList(list) => list |> len |> iota |> map(i => list |> min |> snd) |> each((i, minVal) => list := removeIndex(list, minVal))
+
+// Function to compute the median of a set of integers.
+computeMedian(list) => {
+  // Sort the list in ascending order.
+  sortedList = sortList(list)
+  
+  // Get the length of the list.
+  length = len(sortedList)
+
+  // Check if the length is even.
+  isEven = length % 2 == 0
+
+  // If the length is even, the median is the average of the two middle numbers.
+  // Otherwise, the median is just the middle number.
+  median = 
+    if isEven then 
+      (sortedList[length / 2 - 1] + sortedList[length / 2]) / 2 
+    else 
+      sortedList[length / 2]
+  
+  // Return the median.
+  median
+}

@@ -1,0 +1,14 @@
+// Define a range from 1 to 999.
+range = iota(999) |> map(x => x + 1)
+
+// Define a function to check if a number is a multiple of 3 or 5.
+isMultipleOf3Or5 = (num) => num % 3 == 0 || num % 5 == 0
+
+// Filter the range to get only multiples of 3 or 5.
+multiples = range |> filter(isMultipleOf3Or5)
+
+// Sum the multiples.
+sum = multiples |> fold((a, b) => a + b, 0)
+
+// Print the sum.
+print(sum)

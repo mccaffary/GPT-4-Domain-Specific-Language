@@ -1,0 +1,11 @@
+// The map-like function would take a function and a list, and apply the function to each element in the list.
+mapList(func, list) => {
+  len(list) > 0 |> enforce("Cannot map over an empty list.")
+  in iota(len(list)) |> fold((result, i) => addEntry(result, func(list[i])), [])
+}
+
+// The filter-like function would take a predicate and a list, and return a list of elements for which the predicate returns true.
+filterList(pred, list) => {
+  len(list) > 0 |> enforce("Cannot filter an empty list.")
+  in iota(len(list)) |> fold((result, i) => if pred(list[i]) then addEntry(result, list[i]) else result, [])
+}

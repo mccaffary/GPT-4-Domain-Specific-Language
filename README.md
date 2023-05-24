@@ -18,7 +18,7 @@ Here, the domain-specific language SIL (Symmetry Integration Language) was selec
 
 ## Prompt-engineering
 
-Below is a collection of prompts consisting of short examples of SIL code which highlight its functionality. After prompting GPT-4 with the task and providing SIL code samples (see below; the full library of [prompts]() and [generated code samples]() can also be found in this repo), I asked it to implement a number of mainstream programing tasks in SIL.
+Below is a collection of some prompts consisting of short examples of SIL code which highlight its functionality. After prompting GPT-4 with the task and providing SIL code samples (see below; the full library of [prompts](https://github.com/mccaffary/GPT-4-Domain-Specific-Language/tree/main/src/SIL-code/prompt-example) and [generated code samples](https://github.com/mccaffary/GPT-4-Domain-Specific-Language/tree/main/src/SIL-code/generated-SIL-code) can also be found in this repo), I asked it to implement a number of mainstream programing tasks in SIL.
 
 In the sections below, I show some of the example SIL code scripts with which the model was prompted (the full set of examples can be found [here](https://github.com/mccaffary/ChatGPT-Domain-Specific-Language/tree/main/prompt_library)) and its attempts to implement various problems in SIL.
 
@@ -48,16 +48,40 @@ rules=[ [
 	]],
 	["INBOX/newsletters",
 	[
-		"FROM news@pitchbook.com", "HEADER X-mailer mailgun", "HEADER X-mailer WPMailSMTP/Mailer/mailgun 2.4.0", "HEADER X-mailer nlserver",
-		"FROM hbr.org", "FROM elliottwave.com", "OR FROM cio.com FROM cio.co.uk", "FROM substack.com", "FROM eaglealpha.com",
-		"FROM haaretz.com", "FROM gavekal.com", "FROM go.weka.io", "FROM marketing.weka.io", `HEADER list-unsubscribe ""`,
-		`HEADER list-Id ""`, `HEADER list-Post ""`, `HEADER list-owner""`, `HEADER Precedence bulk`, `HEADER Precedence list`,
-		`HEADER list-bounces ""`, `HEADER list-help ""`, `HEADER List-Unsubscribe ""`, "FROM no-reply",
+		"FROM news@pitchbook.com",
+		"HEADER X-mailer mailgun",
+		"HEADER X-mailer WPMailSMTP/Mailer/mailgun 2.4.0",
+		"HEADER X-mailer nlserver",
+		"FROM hbr.org",
+		"FROM elliottwave.com",
+		"OR FROM cio.com FROM cio.co.uk",
+		"FROM substack.com",
+		"FROM eaglealpha.com",
+		"FROM haaretz.com",
+		"FROM gavekal.com",
+		"FROM go.weka.io",
+		"FROM marketing.weka.io",
+		`HEADER list-unsubscribe ""`,
+		`HEADER list-Id ""`,
+		`HEADER list-Post ""`,
+		`HEADER list-owner""`,
+		`HEADER Precedence bulk`,
+		`HEADER Precedence list`,
+		`HEADER list-bounces ""`,
+		`HEADER list-help ""`,
+		`HEADER List-Unsubscribe ""`,
+		"FROM no-reply",
 	]],
 	["INBOX/notifications",
 	[
-		`KEYWORD "$IsNotification"`, "FROM feedback@slack.com", "FROM donotreply@myhermes.co.uk", "FROM skillcast.com",
-		"FROM reedmac.co.uk", "FROM noreply@uber.com", "FROM uber@uber.com", "FROM do-not-reply@trello.com",
+		`KEYWORD "$IsNotification"`,
+		"FROM feedback@slack.com",
+		"FROM donotreply@myhermes.co.uk",
+		"FROM skillcast.com",
+		"FROM reedmac.co.uk",
+		"FROM noreply@uber.com",
+		"FROM uber@uber.com",
+		"FROM do-not-reply@trello.com",
 	]],
 ]
 
@@ -162,6 +186,32 @@ print(headers)
 The third code sample further illustrates some of the unusual features of this DSL, with the aim that ChatGPT will use these in its own implementations next.
 
 ```d
+// This script will create a report based on a specific example set of automated 'support' emails.
+// E.g.,
+//
+// "support.mbox": 17 messages 17 new
+//  N  1 robot@example.com     Mon May 11 22:26  28/1369  "Alert: new issue 123"
+//  N  2 robot@example.com     Tue May 12 12:20  22/933   "Notification: service change"
+//  N  3 robot@example.com     Tue May 12 12:36  26/1341  "Alert: new issue 124"
+//  N  4 robot@example.com     Wed May 13 02:13  21/921   "Resolution: issue 124"
+//  N  5 person@example.com    Wed May 13 18:53  26/1332  "Email not from robot."
+//  N  6 robot@example.com     Thu May 14 03:13  27/1339  "Alert: new issue 125"
+//  N  7 robot@example.com     Thu May 14 08:46  26/1270  "Resolution: issue 123"
+//  N  8 robot@example.com     Thu May 14 17:06  25/1249  "Alert: new issue 126"
+//  N  9 robot@example.com     Fri May 15 09:46  24/1185  "Resolution: issue 126"
+//  N 10 robot@example.com     Fri May 15 12:33  23/1052  "Alert: new issue 127"
+//  N 11 robot@example.com     Fri May 15 15:20  27/1331  "Notification: service change"
+//  N 12 robot@example.com     Fri May 15 18:06  23/953   "Resolution: issue 127"
+//  N 13 robot@example.com     Mon May 18 12:46  27/1218  "Alert: new issue 128"
+//  N 14 robot@example.com     Mon May 18 15:33  32/1628  "Alert: new issue 129"
+//  N 15 robot@example.com     Tue May 19 05:26  25/1176  "Resolution: issue 128"
+//  N 16 robot@example.com     Tue May 19 08:13  26/1312  "Notification: service change"
+//  N 17 robot@example.com     Tue May 19 11:00  28/1275  "Alert: new issue 130"
+//
+//
+// Each of these automated emails are from `robot` _except_ for message 5.  Messages 2, 8 and 16 are
+// from `robot` but are unrelated to issues.
+//
 // This script will search for emails and match new issue numbers with resolutions to report the
 // number of outstanding alerts.
 
@@ -247,28 +297,68 @@ print(report)
 <summary>Prompt task 1: Implement a simple relational database</summary>
 <br>
   
-As a first exercise, I asked the model to implement a very simple relational database in SIL, with basic functionalities such as comparing and printing the difference between two data structure (note that `//` denotes commenting in SIL).
+As a first exercise, I asked the model to implement a very simple relational database in SIL, with basic functionalities (note that `//` denotes commenting in SIL).
 
 ```d
-// Here, ChatGPT was prompted to write a a very simple, schematic relational database in SIL
-// This prompt proved too general, perhaps, and after requesting further information, I prompted the model to generate a simple, schematic database with functionalities such as "compare" and "diff" for two or more tables
+import imap
+import imap_config
+import string
 
-users = [    {"id": 1, "name": "John Doe", "email": "johndoe@example.com"},    {"id": 2, "name": "Jane Smith", "email": "janesmith@example.com"},    {"id": 3, "name": "Bob Johnson", "email": "bobjohnson@example.com"},]
+// Get the configuration from the environment and command line.
+config = imap_config.getConfig(commandLineArguments)
 
-orders = [    {"id": 1, "user_id": 1, "product": "Widget", "quantity": 2, "price": 19.99},    {"id": 2, "user_id": 2, "product": "Gadget", "quantity": 1, "price": 29.99},    {"id": 3, "user_id": 3, "product": "Thingamajig", "quantity": 3, "price": 39.99},]
+// Connect to the server.
+creds = imap.ImapLogin(config.user, config.pass)
+server = imap.ImapServer(config.host, config.port)
+session =
+  imap.Session(server, creds)
+  |> imap.openConnection()
+  |> imap.login()
 
-// Compare two tables
-compareTables(table1, table2) => {
-    table1 == table2
+// -------------------------------------------------------------------------------------------------
+// Here's an attempt to create something resembling a simple relational database.
+
+// Define two tables, 'Employees' and 'Departments'.
+Employees = { "1": ["Alice", "Engineering"], "2": ["Bob", "Marketing"], "3": ["Charlie", "Engineering"] }
+Departments = { "Engineering": ["Alice", "Charlie"], "Marketing": ["Bob"] }
+
+// Function to emulate SQL SELECT operation.
+select = (table, id) => {
+    table[id] |> enforce("Id does not exist in table.")
 }
 
-//Diff two tables
-diffTables(table1, table2) => {
-    table1.filter(i => !table2.includes(i))
+// Function to emulate SQL INSERT operation.
+insert = (table, id, values) => {
+    addEntry(table, id, values)
 }
 
-print(compareTables(users, users)) // true
-print(diffTables(users, orders)) // [{"id": 1, "name": "John Doe", "email": "johndoe@example.com"}]
+// Function to emulate SQL DELETE operation.
+delete = (table, id) => {
+    removeEntry(table, id)
+}
+
+// Function to emulate SQL JOIN operation.
+join = (table1, table2, commonField) => {
+    // This is a very basic JOIN operation and does not account for multiple matches, etc.
+    joinedTable = {}
+    for key in keys(table1) {
+        value = table1[key][commonField]
+        if find(keys(table2), value) != [] {
+            joinedTable = addEntry(joinedTable, key, [table1[key], table2[value]])
+        }
+    }
+    joinedTable
+}
+
+// Close the session.
+imap.closeConnection(session)
+
+// Perform operations.
+newEmployee = ["David", "Marketing"]
+Employees = insert(Employees, "4", newEmployee)
+Departments = insert(Departments, newEmployee[1], ["David"])
+print(select(Employees, "1"))
+print(join(Employees, Departments, 1))
 ```
   
 </details>
@@ -277,26 +367,29 @@ print(diffTables(users, orders)) // [{"id": 1, "name": "John Doe", "email": "joh
 <summary>Prompt task 2: Implement bubblesort</summary>
 <br>
 
-Implementing sorting algorithms is an archetypal software engineering interview question. Here, I asked ChatGPT to implement [bubblesort](https://en.wikipedia.org/wiki/Bubble_sort) (conceptually the most basic sorting algorithm) in SIL. Below is the response:
+Implementing sorting algorithms is an archetypal software engineering interview question. Here, I asked GPT-4 to implement [bubblesort](https://en.wikipedia.org/wiki/Bubble_sort) (conceptually the most basic sorting algorithm) in SIL. Below is the response:
 
 ```d
-bubbleSort(arr) => {
-    for i in 1...len(arr) {
-        for j in 1...len(arr) - i {
-            if (arr[j] > arr[j+1]) {
-                temp = arr[j]
-                arr[j] = arr[j+1]
-                arr[j+1] = temp
-            }
-        }
-    }
-    arr
+// Helper function to bubble up the largest value in one pass
+bubble(list) => {
+  if length(list) <= 1 then
+    list
+  else
+    if list[0] > list[1] then
+      [list[1]] ~ bubble([list[0]] ~ list[2 to $])
+    else
+      [list[0]] ~ bubble(list[1 to $])
 }
 
-arr = [4, 6, 1, 3, 5, 2]
-print(bubbleSort(arr))
+// Main BubbleSort function
+bubbleSort(list) => {
+  bubbled = bubble(list)
+  if bubbled == list then
+    list
+  else
+    bubbleSort(bubbled)
+}
 ```
-Although this script is, indeed, a working implementation of bubblesort, the model broadly ignores the *functional* aspects of SIL. For instance, this implementation of bubblesort using `for` loops instead of recursion.
   
 </details>
 
@@ -304,29 +397,34 @@ Although this script is, indeed, a working implementation of bubblesort, the mod
 <summary>Prompt task 3: Implement a function to compute the median of an array/list</summary>
 <br>
 
-Next, I prompted the model to write a script for computing the median of a list (generated response below). This was, perhaps, one of the least satisfying responses. Firstly, despite `if/else` statements featuring in the example SIL code with which I prompted the model, the syntax in this generated code is incorrect. Secondly, ChatGPT hallucinates (or assumes) the presence of a module called `math` and a buil-in function `sort` (these are reasonable assumptions, but it does significantly decrease the complexity of the prompted problem).
+Next, I prompted the model to write a script for computing the median of a list (generated response below). The helper function `sortList` is, indeed, consistent with functional programming paradigms, but here GPT-4 assumes the existence of the assignment operator `:=`.
 
 ```d
-// Notably, despite if/else statements featuring in the code prompts used for training, ChatGPT gets the syntax wrong here
+// Helper function to sort an array of integers.
+sortList(list) => list |> len |> iota |> map(i => list |> min |> snd) |> each((i, minVal) => list := removeIndex(list, minVal))
 
-import math
+// Function to compute the median of a set of integers.
+computeMedian(list) => {
+  // Sort the list in ascending order.
+  sortedList = sortList(list)
+  
+  // Get the length of the list.
+  length = len(sortedList)
 
-// Function to compute the median of a list of integers
-median(numbers) => {
-    // Sort the list of numbers
-    sortedNumbers = sort(numbers)
+  // Check if the length is even.
+  isEven = length % 2 == 0
 
-    // Get the middle index of the sorted list
-    middleIndex = math.floor(len(sortedNumbers) / 2)
-
-    // If the list has an odd number of elements, return the middle element
-    if len(sortedNumbers) % 2 == 1:
-        return sortedNumbers[middleIndex]
-    // Otherwise, return the average of the two middle elements
-    else:
-        return (sortedNumbers[middleIndex - 1] + sortedNumbers[middleIndex]) / 2
+  // If the length is even, the median is the average of the two middle numbers.
+  // Otherwise, the median is just the middle number.
+  median = 
+    if isEven then 
+      (sortedList[length / 2 - 1] + sortedList[length / 2]) / 2 
+    else 
+      sortedList[length / 2]
+  
+  // Return the median.
+  median
 }
-
 ```
   
 </details>
@@ -335,59 +433,29 @@ median(numbers) => {
 <summary>Prompt task 4: Implement the k-nearest neighbours algorithm</summary>
 <br>
   
-ChatGPT was next prompted to implement the *k*-nearest neighbours algorithm in SIL. This is actually the result of two prompts (as described in the generated code block below), because the model hallucinates/assumes a module called `distances` in the first attempt. In the second attempt, I prompted it to implement the algorithm without assuming the existence of this module.
-
-ChatGPT's performance here is mixed. Firstly, in some cases, it ignores the functional aspects of SIL (such as implementing a `for` loop in the first attempt. In other parts of the implementation, however, it does appreciate that SIL is functional, and employs `|>` and `map` operators accurately. Notably, the model does appear to hallucinate `let` bindings which do not feature in the example code with which it was prompted. This is likely due to conflating the functionality of SIL code with OCaml or F#.
+GPT-4 was next prompted to implement the *k*-nearest neighbours algorithm in SIL. Aside from hallucinating/assuming the existence of a module called `math` (which, arguably, is a reasonable assumption for the scope of this exercise), this seems like an acceptable solution, which appropriately leverages functional operators such as `|>`, `map`, and `fold`.
 
 ```d
-// Note that this is the fusion of two separate scripts generated by ChatGPT to solve the k-nearest neighbours algorithm, as described in the comments below
-// Overall, these attempts seem reasonable, but it does appear to hallucinate "let" bindings which do not feature in the example code with which it was prompted. This is likely due to conflating the functionality of SIL code with OCaml or F#
+import math
 
-// Attempt 1:
-// This is the first ChatGPT attempt when prompted to generate a script for the k-nearest neighbours algorithm
-// In this case, it assumes (or hallucinates) a library called "distances"
-
-import distances
-
-// Define a point as a tuple of x and y coordinates
-type Point = (num, num)
-
-// Find the distance between two points
-distance(p1: Point, p2: Point) => {
-    let xDistance = p1[0] - p2[0]
-    let yDistance = p1[1] - p2[1]
-    in sqrt(xDistance * xDistance + yDistance * yDistance)
-}
-
-// Find the k nearest points to a given point
-kNearest(point: Point, points: [Point], k: num) => {
-    // Compute the distances between the given point and all other points
-    let distances = points |> map(p => (p, distance(point, p)))
-
-    // Sort the points by distance
-    distances = distances |> sort((d1, d2) => d1[1] < d2[1])
-
-    // Return the k closest points
-    in distances[:k] |> map(d => d[0])
-}
-
-// Attempt 2:
-// Next, ChatGPT is prompted to generate a script without importing the questionable "distances" library
-// Again, it assumes some in-built functions, such as "sort" or "sqrt"
-
-// Function to calculate the distance between two points
 distance(p1, p2) => {
-    sum = 0
-    for i in 0..len(p1) - 1 {
-        sum = sum + (p1[i] - p2[i])^2
-    }
-    sqrt(sum)
+  math.sqrt(
+    math.pow(p1[0] - p2[0], 2)
+    + math.pow(p1[1] - p2[1], 2)
+  )
 }
 
-// Function to find the k nearest neighbors
-k_nearest_neighbors(data, point, k) => {
-    distances = data |> map(p => (p, distance(p, point)))
-    distances |> sort((a, b) => a[1] < b[1]) |> take(k) |> map(p => p[0])
+majorityVote(labels) => {
+  labelCounts = labels |> fold((counts, label) => addEntry(counts, label, get(counts, label, 0) + 1), {})
+  labelCounts |> maxBy((_, count) => count)
+}
+
+knn(data, newPoint, k) => {
+  distances = data |> map((point, label) => (distance(point, newPoint), label))
+  sorted = distances |> sort((a, b) => a[0] < b[0])
+  nearest = sorted |> take(k)
+  labels = nearest |> map((_, label) => label)
+  majorityVote(labels)
 }
 
 ```
@@ -399,48 +467,33 @@ k_nearest_neighbors(data, point, k) => {
 <summary>Prompt task 5: Implement functional operators</summary>
 <br>
 
-One of the interesting features of functional languages is that they can be highly expressive. Here, I prompted ChatGPT to implement the basic functional operators `map`, `filter`, and `reduce` (or `fold` in the context of functional languages). For the first few cases, the model seemed to lose track of the functional aspects of SIL, but could re-implement the code in a more functional manner when prompted.
+One of the interesting features of functional languages is that they can be highly expressive. Here, I prompted GPT-4 to implement the basic functional operators `map`, `filter`, and `reduce` (or `fold` in the context of functional languages).
 	
 ```d
 // map
 
-map(fn, list) => {
-    result = []
-    for i in list {
-        result.append(fn(i))
-    }
-    return result
+// The map-like function would take a function and a list, and apply the function to each element in the list.
+mapList(func, list) => {
+  len(list) > 0 |> enforce("Cannot map over an empty list.")
+  in iota(len(list)) |> fold((result, i) => addEntry(result, func(list[i])), [])
 }
 
 // filter
 
-filter(fn, list) => {
-    result = []
-    for i in list {
-        if (fn(i)) {
-            result.append(i)
-        }
-    }
-    return result
+// The filter-like function would take a predicate and a list, and return a list of elements for which the predicate returns true.
+filterList(pred, list) => {
+  len(list) > 0 |> enforce("Cannot filter an empty list.")
+  in iota(len(list)) |> fold((result, i) => if pred(list[i]) then addEntry(result, list[i]) else result, [])
 }
 
 // reduce
 
-reduce(fn, list, initial) => {
-    result = initial
-    for i in list {
-        result = fn(result, i)
-    }
-    return result
+// The reduce-like function would take a binary function, a list, and an initial accumulator, and apply the function to each element in the list with the accumulator.
+reduceList(func, list, acc) => {
+  len(list) > 0 |> enforce("Cannot reduce an empty list.")
+  in iota(len(list)) |> fold((result, i) => func(result, list[i]), acc)
 }
 
-// reduce (prompted to use functional operators such as pipe |>, in addition to the 'map' and 'filter' functions defined previously)
-
-reduce(fn, list, initial) => 
-    list |> 
-    filter(fn, _, initial) => 
-    map(fn, _, initial) => 
-    initial
 ```
   
 </details>
@@ -449,48 +502,62 @@ reduce(fn, list, initial) =>
 <summary>Prompt task 6: Solving Project Euler problems in SIL</summary>
 <br>
 
-[Project Euler](https://projecteuler.net/) is a collection of mathematical and programming problems (which I think make [interesting prompts](https://github.com/mccaffary/ChatGPT-Project-Euler) for LLMs). Here, I prompt ChatGPT to solve the first two Project Euler problems using SIL. At this point, ChatGPT's repsonses dteriorated somewhat; neither of these solutions bears much resemblance to either the high-level functionality of SIL nor its exaxct syntax. It might be interesting to provide further SIL code examples at this point and then re-prompt the model to solve these problems.
+[Project Euler](https://projecteuler.net/) is a collection of mathematical and programming problems (which I think make [interesting prompts](https://github.com/mccaffary/ChatGPT-Project-Euler) for LLMs). Here, I prompt GPT-4 to solve the first two Project Euler problems using SIL.
 
 ```d
 // Project Euler problem #1:
 // Here, my prompt was to solve the (easy) first problem of the Project Euler series (https://projecteuler.net/problem=1)
-// Notably, despite if/else statements featuring in the code prompts used for training, ChatGPT gets the syntax wrong here
 
-result = 0
-for i in 1...1000 {
-    if (i % 3 == 0 || i % 5 == 0) {
-        result += i
-    }
-}
-print(result)
+// Define a range from 1 to 999.
+range = iota(999) |> map(x => x + 1)
+
+// Define a function to check if a number is a multiple of 3 or 5.
+isMultipleOf3Or5 = (num) => num % 3 == 0 || num % 5 == 0
+
+// Filter the range to get only multiples of 3 or 5.
+multiples = range |> filter(isMultipleOf3Or5)
+
+// Sum the multiples.
+sum = multiples |> fold((a, b) => a + b, 0)
+
+// Print the sum.
+print(sum)
+
 ```
 
 ```d
 // Project Euler problem #2:
 // This prompt is to solve the second Project Euler problem (https://projecteuler.net/problem=2)
-// The solution proposed by ChatGPT is sensible, but potentially inefficient, and ignores the recursion of functional languages
-// Notably, despite if/else statements featuring in the code prompts used for training, ChatGPT gets the syntax wrong here
 
-result = 0
+// Define a function to generate the next term in the Fibonacci sequence.
+nextFibonacciTerm = (tuple) => [tuple[1], tuple[0] + tuple[1]]
 
-fib(n) => {
-    if (n <= 1) {
-        return n
-    }
-    return fib(n-1) + fib(n-2)
+// Start with the first two terms.
+initialTerms = [1, 2]
+
+// Define a function to generate Fibonacci sequence up to a limit.
+generateFibonacci = (limit) => {
+  fibonacciSequence = unfold(nextFibonacciTerm, initialTerms, (tuple) => tuple[1] <= limit)
+  fibonacciSequence
 }
 
-for i in 1...100 {
-    val = fib(i)
-    if (val > 4000000) {
-        break
-    }
-    if (val % 2 == 0) {
-        result += val
-    }
-}
+// Define a function to check if a number is even.
+isEven = (num) => num % 2 == 0
 
-print(result)
+// Generate the Fibonacci sequence up to four million.
+fibonacciSequence = generateFibonacci(4000000)
+
+// Extract the second term from each tuple in the sequence, which is the actual Fibonacci number.
+fibonacciNumbers = fibonacciSequence |> map(tuple => tuple[1])
+
+// Filter the sequence to get only even numbers.
+evenFibonacciNumbers = fibonacciNumbers |> filter(isEven)
+
+// Sum the even numbers.
+sum = evenFibonacciNumbers |> fold((a, b) => a + b, 0)
+
+// Print the sum.
+print(sum)
 
 ```
   
@@ -498,10 +565,7 @@ print(result)
 
 ## High-level summary
 
-Exploring the ability of LLMs to infer and understand the features of a novel programming language in a *few-shot* manner remains an open and interesting question. Here, these capacities were explored in the context of prompting ChatGPT to solve prompted problems in a novel domain-specific language (DSL) called SIL. DSLs are a potentially useful test case for exploring *inference* vs *memorisation* in LLMs, as they often have distinctive features and are less likely to have been extensively encountered during training (if at all).
+Exploring the ability of LLMs to infer and understand the features of a novel programming language in a *few-shot* manner remains an open and interesting question. Here, these capacities were explored in the context of prompting GPT-4 to solve prompted problems in a novel domain-specific language (DSL) called SIL. DSLs are a potentially useful test case for exploring *inference* vs *memorisation* in LLMs, as they often have distinctive features and are less likely to have been extensively encountered during training (if at all).
   
-Overall, the performance was mixed: ChatGPT correctly understood that this DSL is a functional programming language (although it sometimes had to be re-prompted of this), and implemented its solutions accordingly. However, it broadly failed to capture the syntactic rules of this DSL from the five example scripts provided. Further investigations (such as using other DSLs, developing some more formal metric for evaluating the LLM-generated code, or quantifying the learning dynamics of the model) would make for an intriguing extension of this repo. Finally, in a separate ChatGPT session, I provided this meta-prompt to determine how the model interpreted its own SIL code:
-  
-![](images/chatgpt_dsl_meta_prompt.png)
-> ChatGPT examines its own attempt to write code in the domain-specific language SIL, and describes some of its features.
+Perhaps the most interesting finding of this exercise is that the few-shot inference capabilities of GPT-4 are *significantly* better than those of ChatGPT when evaluated on the same prompts and tasks (see analogous exercise with ChatGPT [here](https://github.com/mccaffary/ChatGPT-Domain-Specific-Language/tree/main)).
   

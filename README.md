@@ -1,6 +1,6 @@
-# Investigating the programming abilities of ChatGPT with an abitrary DSL
+# Investigating the programming abilities of GPT-4 with an abitrary DSL
 
-## Large language models, domain-specific languages, and ChatGPT
+## Large language models, domain-specific languages, and GPT-4 inference
 
 [NB: this repo is a follow-up to the same inference task evaluating [ChatGPT](https://github.com/mccaffary/ChatGPT-Domain-Specific-Language/tree/main).]
 
